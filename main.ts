@@ -1,8 +1,3 @@
-let leftPressed = false
-let rightPressed = false
-
-
-
 let leftStartToPressed = 0
 let rightStartToPressed = 0
 
@@ -14,21 +9,22 @@ const rightDP: DigitalPin = DigitalPin.P14;
 let rightD: boolean = false;
 pins.setPull(rightDP, PinPullMode.PullNone)
 
-basic.forever(function () {
-    leftD = pins.digitalReadPin(leftDP) === 0; //leftD je true, pokud detekuje překážku
-    basic.pause(20);
+control.inBackground(function () {
+    basic.forever(function () {
+        leftD = pins.digitalReadPin(leftDP) === 0; //leftD je true, pokud detekuje překážku
+        basic.pause(20);
 
-    rightD = pins.digitalReadPin(rightDP) === 0; //rightD je true, pokud detekuje překážku
-    basic.pause(20);
+        rightD = pins.digitalReadPin(rightDP) === 0; //rightD je true, pokud detekuje překážku
+        basic.pause(20);
+    })
 })
 
-
-input.onButtonPressed(Button.A, function() {
+basic.forever(function () {
 
     let startTime = input.runningTime()
 
-    let delayStartTime = Math.random() * (4 + 2) * 1000 
-    basic.pause(delayStartTime)
+    let delayStartTime = Math.random() * 4 + 2
+    basic.pause(delayStartTime * 1000)
 
     basic.showLeds(`
     # # # # #
@@ -36,37 +32,42 @@ input.onButtonPressed(Button.A, function() {
     # . # . #
     # . . . #
     # # # # #
-    `)
+    `,0)
 
     
     music.playTone(440, 1500)
     
-    
+    let timeAfterStart = input.runningTime()
+    let timeDelay = timeAfterStart - startTime
+
 
     if(leftD == true){
         let leftEndTime = input.runningTime()
-        let leftStartToPressed = leftEndTime - startTime
+        leftStartToPressed = leftEndTime - startTime
     }
 
     if(rightD == true){
         let rightEndTime = input.runningTime()
-        let rightStartToPressed = rightEndTime - startTime
+        rightStartToPressed = rightEndTime - startTime
     }
 
-    if (leftStartToPressed * 1000 < delayStartTime || rightStartToPressed * 1000 < delayStartTime){
-        
-    }else{
+    if (leftStartToPressed < timeDelay || rightStartToPressed < timeDelay){
+        if(leftStartToPressed < timeDelay){
+            basic.showString("B")
+        }else if(rightStartToPressed < timeDelay){
+            basic.showString("A")
+        }else{
+            basic.showString("C")
+        }
+    }else{ 
         if(leftStartToPressed < rightStartToPressed){
-        basic.showNumber(1)
-        }
-
-        if (leftStartToPressed > rightStartToPressed) {
-         basic.showNumber(2)
-        }
-    
-        if (leftStartToPressed == rightStartToPressed) {
+            basic.showNumber(1)
+        }else if(leftStartToPressed > rightStartToPressed){
+            basic.showNumber(2)
+        }else{
             basic.showString("R")
         }
+    
     }
     
     
