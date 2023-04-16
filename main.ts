@@ -55,12 +55,12 @@ basic.forever(function () {
     }
 
     if (leftStartToPressed < timeDelay || rightStartToPressed < timeDelay){
-        if(leftStartToPressed < timeDelay){
-            basic.showString("B")
+        if (leftStartToPressed < timeDelay && rightStartToPressed < timeDelay){
+            basic.showString("C")
         }else if(rightStartToPressed < timeDelay){
             basic.showString("A")
         }else{
-            basic.showString("C")
+            basic.showString("B")
         }
     }else{ 
         if(leftStartToPressed < rightStartToPressed){
