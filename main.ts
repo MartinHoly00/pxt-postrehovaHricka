@@ -26,6 +26,8 @@ basic.forever(function () {
     let delayStartTime = Math.random() * 4 + 2
     basic.pause(delayStartTime * 1000)
 
+    control.inBackground(function () {
+        
     basic.showLeds(`
     # # # # #
     # . . . #
@@ -36,7 +38,8 @@ basic.forever(function () {
 
     
     music.playTone(440, 1500)
-    
+    })
+
     let timeAfterStart = input.runningTime()
     let timeDelay = timeAfterStart - startTime
 
